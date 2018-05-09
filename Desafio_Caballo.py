@@ -17,8 +17,7 @@
    VARIABLES Logicas
 
 """	
-import random	 
-import sys
+import random
 # Lista de subprogramas (funciones) que usa el esqueleto principal:
 
 def crearPosibles(tabl=list,Anterior_Jugada=list) -> list:
@@ -103,16 +102,25 @@ def jugadaUser( tabl = list, turno = int, Posibles=list ) -> (list,int,int) :
 			assert(0<=jugada_seleccionada<opciones)
 			break		
 		except:
-			print("Parece que no has escojido una jugada valida")
+			print "Parece que no has escojido una jugada valida"
 	if Intentos=7:
-		print("Demasiados intentos, tendras que empezar de nuevo")
-		sys.exit
+		print "Demasiados intentos, tendras que empezar de nuevo"
 
 	anteriorfila=Posibles[jugada_seleccionada][0]
 	actualcolumna=Posibles[jugada_seleccionada][1]	
 	tabl[actualfila][actualcolumna]=turno
 	
 	return tabl,actualfila,actualcolumna
+
+def jugadaBruta( tabl = list, turno = int, Posibles=list ) -> (list,int,int) :
+	# VAR:
+		# jugada_seleccionada : int
+		# opciones : int
+		# Intentos : int
+	jugada_seleccionada=random.randint(0,len(Posibles))
+	anteriorfila=Posibles[jugada_seleccionada][0]
+	actualcolumna=Posibles[jugada_seleccionada][1]	
+	tabl[actualfila][actualcolumna]=turno
 
 def mostrar_tablero(tabl=list, Tam=int)->:
 	mostrar_columnas=[0]*Tam
@@ -129,7 +137,7 @@ def back_in_time(tabl=list,anteriorfila=int,anteriorcolumna=int,turno=int)->(lis
 
 	tabl[anteriorfila][anteriorcolumna]=0
 	Posibles=crearPosibles(tabl,anteriorfila,anteriorcolumna)
-	Malas_Jugadas.append([anteriorfila,anteriorcolumna])
+	Malas_Jugadas=[anteriorfila,anteriorcolumna]
 
 	for i in len(Posibles):
 		Fila_Del_Pasado=Posibles[i][0]
@@ -157,18 +165,19 @@ while dentro :							# Dentro del juego
 				assert( Tam>=3 )
 				break
 			except:
-				print("Ingrese un natural mayor o igual que 3")			
+				print "Ingrese un natural mayor o igual que 3"			
 			try: 
 				eleccion_algoritmo=int(input("Que algorimo desea usar?(0=Manual,1=Fuerza_Bruta,2=Divide_y_conquistaras,3=Terminar)"))
-				assert( eleccion_algoritmo==0 or eleccion_algoritmo==2 or eleccion_algoritmo==1 or eleccion_algoritmo==3 or eleccion_algoritmo==4 )
+				assert( eleccion_algoritmo==0 or eleccion_algoritmo==2 or eleccion_algoritmo==1 or eleccion_algoritmo==3 )
 				break
 			except:
-				print("Seleccione 0,1,2,3 o 4")
+				print "Seleccione 0,1,2,3 o 4"
 		
 		tabl=[[0]*Tam for i in range(Tam)]		# Crear tablero de juego lleno de ceros.
 		jugando=True
 		tabl[0][0]=1
 		turno=2
+		Jugada_Inicial=[0][0]
 		Anterior_Jugada=[0,0]
 		Malas_Jugadas=[]
 		mostrar_columnas=[0]*Tam
@@ -176,26 +185,74 @@ while dentro :							# Dentro del juego
 		for i in range(Tam):
 			mostrar_columnas[i]=i
 
-		if eleccion_algoritmo==3:	# El usuario decide que quiere salir del juego
-			dentro=False			# Salimos del loop del juego
-			print("Hasta luego!")	# Nos depedimos del usuario
+	elif jugando and eleccion_algoritmo==3:		# El usuario decide que quiere salir del juego
+			dentro=False						# Salimos del loop del juego
+			print "Hasta luego!"				# Nos depedimos del usuario
 	
-	elif jugando and eleccion_algoritmo==1:					#en partida
+	elif jugando and eleccion_algoritmo==2:		# Modo divide y conquistaras
+
+
+	elif jugando and eleccion_algoritmo==1: 	# Modo fuerza bruta activado
+
+		Posibles=crearPosibles(tabl,Anterior_Jugada)
+		for i in range(len(Posibles)):
+			Posibles.remove(Malas_Jugadas[i])
+
+		if Anterior_Jugada==Jugada_Inicial and len(Posibles)==0:
+			dentro=False						# Salimos del loop del juego
+			print "Se intentaron todas las posibles rutas, no hay solucion"
+
+		elif len(Posibles)==0:
+			if Turno==(Tam*Tam)+1
+				print "Felicidades, lo has conseguido"
+				jugando=False
+			else:
+				Rback_in_time=back_in_time(tabl,Anterior_Jugada,turno)
+				tabl=Rback_in_time[0]
+				Anterior_Jugada=Rback_in_time[1]
+				Malas_Jugadas.append(Rback_in_time[2])
+				turno=turno-2
+		elif len(Posibles)==1:
+			tabl[Posibles[0][0]][Posibles[0][1]]=turno
+			Anterior_Jugada=[Posibles[0][0],Posibles[0][1]]
+
+		elif len(Posibles)>=2:
+			Rbruta=jugadaBruta(tabl,turno,Posibles)
+			tabl=Rbruta[0]
+			Anterior_Jugada=[Rbruta[1],Rbruta[2]]
+
+	
+	elif jugando and eleccion_algoritmo==1:		# Modo manual activado
 
 		seguir=bool(input("Desea seguir en esta partida?(Si=Enter)(No=Else)")) # en cada turno
+		step_back=bool(input("Desea anular su jugada anterior?(Si=Enter)(No=Else)")) # en cada turno
 		if seguir:
 			jugando=False
 			print "Nos vemos"
-		elif not(seguir):	
+
+		elif not(seguir):
 			Posibles=crearPosibles(tabl,Anterior_Jugada)
 			for i in range(len(Posibles)):
 				Posibles.remove(Malas_Jugadas[i])
-			if len(Posibles)==0:
+			
+			if step_back:
+				if Anterior_Jugada==Jugada_Inicial:
+					print "No es posible volver mas atras"
+				else:
+					Rback_in_time=back_in_time(tabl,Anterior_Jugada,turno)
+					tabl=Rback_in_time[0]
+					Anterior_Jugada=Rback_in_time[1]
+
+			elif Anterior_Jugada==Jugada_Inicial and len(Posibles)==0:
+				dentro=False						# Salimos del loop del juego
+				print "Se intentaron todas las posibles rutas, no hay solucion"
+
+			elif len(Posibles)==0:
 				if Turno==(Tam*Tam)+1
 					print "Felicidades, lo has conseguido"
 					jugando=False
 				else:
-					print "Se agotaron las opciones,volviendo un paso atras"
+					print "Se agotaron las opciones, volviendo un paso atras"
 					Rback_in_time=back_in_time(tabl,Anterior_Jugada,turno)
 					tabl=Rback_in_time[0]
 					Anterior_Jugada=Rback_in_time[1]
@@ -211,7 +268,7 @@ while dentro :							# Dentro del juego
 				mostrar_tablero(tabl, Tam)
 				print mostrar_columnas
 				print "Estas son tus Posibles jugadas"
-				print Posibles
+				print Posibles	
 				Ruser=jugadaUser(tabl, turno, Posibles)	# Almacenamos los cambios tras la jugada del usuario.
 				tabl=Ruser[0]							# Reescribimos el tablero con la jugada
 				Anterior_Jugada=[Ruser[1],Ruser[2]]		# Guardamos la jugada
