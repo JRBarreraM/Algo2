@@ -115,20 +115,22 @@ def jugadaUser( tabl = list, turno = int, Posibles=list ) -> (list,int,int) :
 	return tabl,actualfila,actualcolumna
 
 def mostrar_tablero(tabl=list, Tam=int)->:
+	mostrar_columnas=[0]*Tam
 	for i in range(Tam):
-		print tabl[i]
+		print i,"",|,"",tabl[i]
+
 
 def back_in_time(tabl=list,anteriorfila=int,anteriorcolumna=int,turno=int)->(list,int,int,list):
 	# VAR:
 		# Posibles : list
 		# Fila_Del_Pasado : int
 		# Columna_Del_Pasado : int
-		# Mala_Jugada : int
+		# Malas_Jugadas : list
 
 	tabl[anteriorfila][anteriorcolumna]=0
 	Posibles=crearPosibles(tabl,anteriorfila,anteriorcolumna)
-	Mala_Jugada=[anteriorfila,anteriorcolumna]
-	
+	Malas_Jugadas.append([anteriorfila,anteriorcolumna])
+
 	for i in len(Posibles):
 		Fila_Del_Pasado=Posibles[i][0]
 		Columna_Del_Pasado=Posibles[i][1]
@@ -136,7 +138,8 @@ def back_in_time(tabl=list,anteriorfila=int,anteriorcolumna=int,turno=int)->(lis
 			anteriorfila=Fila_Del_Pasado
 			anteriorcolumna=Columna_Del_Pasado
 			Anterior_Jugada=[Fila_Del_Pasado,Columna_Del_Pasado]
-			return tabl,Anterior_Jugada,Mala_Jugada
+			return tabl,Anterior_Jugada,Malas_Jugadas
+
 
 # Incializacion de las variables del juego:
 dentro=True							# Para entrar en el loop del juego
@@ -161,11 +164,17 @@ while dentro :							# Dentro del juego
 				break
 			except:
 				print("Seleccione 0,1,2,3 o 4")
+		
 		tabl=[[0]*Tam for i in range(Tam)]		# Crear tablero de juego lleno de ceros.
 		jugando=True
 		tabl[0][0]=1
 		turno=2
 		Anterior_Jugada=[0,0]
+		Malas_Jugadas=[]
+		mostrar_columnas=[0]*Tam
+
+		for i in range(Tam):
+			mostrar_columnas[i]=i
 
 		if eleccion_algoritmo==3:	# El usuario decide que quiere salir del juego
 			dentro=False			# Salimos del loop del juego
@@ -179,6 +188,8 @@ while dentro :							# Dentro del juego
 			print "Nos vemos"
 		elif not(seguir):	
 			Posibles=crearPosibles(tabl,Anterior_Jugada)
+			for i in range(len(Posibles)):
+				Posibles.remove(Malas_Jugadas[i])
 			if len(Posibles)==0:
 				if Turno==(Tam*Tam)+1
 					print "Felicidades, lo has conseguido"
@@ -188,7 +199,7 @@ while dentro :							# Dentro del juego
 					Rback_in_time=back_in_time(tabl,Anterior_Jugada,turno)
 					tabl=Rback_in_time[0]
 					Anterior_Jugada=Rback_in_time[1]
-					Malas_Jugada.append(Rback_in_time[2])
+					Malas_Jugadas.append(Rback_in_time[2])
 					turno=turno-2
 			elif len(Posibles)==1:
 				tabl[Posibles[0][0]][Posibles[0][1]]=turno
@@ -198,6 +209,7 @@ while dentro :							# Dentro del juego
 				print "Veamos el tablero"
 				print "\n"
 				mostrar_tablero(tabl, Tam)
+				print mostrar_columnas
 				print "Estas son tus Posibles jugadas"
 				print Posibles
 				Ruser=jugadaUser(tabl, turno, Posibles)	# Almacenamos los cambios tras la jugada del usuario.
