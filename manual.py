@@ -1,3 +1,4 @@
+#Manual
 def manualPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,JugadasF=list,JugadasC=list):
 
     # Movimientos
@@ -45,9 +46,15 @@ def manualPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,JugadasF
         return 1    
 
     # Pedir movimiento
-    movimiento=int(input("Movimiento (-1 == regresar un movimiento): "))
+    while True:
+        try:
+            movimiento=int(input("Movimiento(-1 = un mov atras)(-2 = empezar de nuevo)(-3 = abandonar): "))
+            assert(7 >= movimiento >= -3)
+            break
+        except:
+            print 'Por favor ingrese un movimiento valido'
 
-    # Undo
+    # Deshacer Jugada
     if movimiento==-1:
         if len(JugadasF)==1:
             print "No se ha hecho ningun movimiento"
@@ -57,6 +64,13 @@ def manualPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,JugadasF
             JugadasC.pop()
             tabl[ActualF][ActualC]=0
             return manualPrincipal(Tam,JugadasF[len(JugadasF)-1],JugadasC[len(JugadasC)-1],tabl,turno-1,JugadasF,JugadasC)
+
+    elif movimiento==-2:
+        tabl=[Tam*[0] for i in range(Tam)]
+        tabl[ActualF][ActualC]=1
+        manualPrincipal(Tam,ActualF,ActualC,tabl,1,[ActualF],[ActualC])
+    elif movimiento==-3:
+        return 0
 
     Kx=ActualF+verticales[movimiento]
     Ky=ActualC+horizontales[movimiento]

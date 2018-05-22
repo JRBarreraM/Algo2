@@ -16,7 +16,7 @@
 import random
 import sys
 from manual import manualPrincipal
-#from FuerzaBruta import FuerzaBrutaPrincipal
+from FuerzaBruta import FuerzaBrutaPrincipal
 
 # Se le da la bienvenida al usuario
 
@@ -56,10 +56,21 @@ if eleccion_algoritmo == 0:
 	i=int(input("Introduzca en cual fila iniciar, empezando en 0: "))
 	j=int(input("Introduzca en cual columna iniciar, empezando en 0: "))
 	tabl[i][j]=1
-	if manualPrincipal(Tam,i,j,tabl,1,[i],[j])==1:
+	resultado=manualPrincipal(Tam,i,j,tabl,1,[i],[j])
+	if resultado==1:
 		print "Felididades has completado el Knight\'s Tour"
+	elif resultado==0:
+		print "Ejecute nuevamente para probar otra modalidad"
 elif eleccion_algoritmo == 1:
-	FuerzaBrutaPrincipal(Tam,tabl)
+	i=0
+	j=0
+	tabl[i][j]=1
+	resultado=FuerzaBrutaPrincipal(Tam,i,j,tabl,1,[i],[j],[-1])
+	if resultado==1:
+		print "Se ha completado el Knight\'s Tour"
+	elif resultado==0:
+		print "No se ha completado el Knight\'s Tour"
+		print "Ejecute nuevamente para probar otra modalidad"
 elif eleccion_algoritmo ==2:
 	print "Divide y Conquistaras"
 else:
