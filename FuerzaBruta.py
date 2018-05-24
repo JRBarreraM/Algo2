@@ -1,23 +1,11 @@
 # Modo Fuerza Bruta
 
-import random
-
-def verdad():
-    p=False
-    p=p or True
-    
-    return not p
-
-# Movimiento valido
-def valida(m=int,n=int,ActualF=int,ActualC=int):
-	return 0<=ActualF<m and 0<=ActualC<n
-
 #FuerzaBruta
-def FuerzaBrutaPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,JugadasF=list,JugadasC=list,JugadasM=list):
-    print turno
-    # Posibles Movimientos Del Caballo
-	verticales = [-1,-2,-2,-1,1,2,2,1]
-	horizontales = [2,1,-1,-2,-2,-1,1,2]
+def FuerzaBrutaPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,JugadasF=list,JugadasC=list):
+	print turno
+	# Posibles Movimientos Del Caballo
+	filas = [-1,-2,-2,-1,1,2,2,1]
+	columnas = [2,1,-1,-2,-2,-1,1,2]
 
 	if turno==Tam*Tam:				# Ha finalizado el recorrido
 		for i in range(len(JugadasF)):
@@ -27,33 +15,25 @@ def FuerzaBrutaPrincipal(Tam=int,ActualF=int,ActualC=int,tabl=list,turno=int,Jug
 				print tabl[i][j],
 				print '|',
 			print '\n'
-		return 1
-    
-	elif verdad():
-		JugadasF.pop()
-		JugadasC.pop()
-		JugadasM.pop()
-		tabl[ActualF][ActualC]=0
-		return 0
+		print "Se muestra el recorrido logrado, los arreglos corresponden a las Filas y Columnas de cada Movimiento"
+		print JugadasF
+		print JugadasC
+		return 1		# Se termina satisfactoria mente el recorrido
 	
-	for i in range(8): 
-		x=ActualF+verticales[i]
-		y=ActualC+horizontales[i]
-		aux=valida(Tam,Tam,x,y)
-		if aux:
-			if tabl[x][y]==0:
-				JugadasF.append(x)
-				JugadasC.append(y)
-				JugadasM.append(i)
-				tabl[x][y]=1
-				ret = FuerzaBrutaPrincipal(Tam,x,y,tabl,turno+1,JugadasF,JugadasC,JugadasM)
-				if ret:
+	for z in range(8):
+		i=ActualF+filas[z]
+		j=ActualC+columnas[z]
+		if (0<=i<Tam) and (0<=j<Tam):
+			if tabl[i][j]==0:
+				JugadasF.append(i)
+				JugadasC.append(j)
+				tabl[i][j]=1
+				if FuerzaBrutaPrincipal(Tam,i,j,tabl,turno+1,JugadasF,JugadasC)==1:
 					return 1
-		elif aux:
-			opciones.remove(i)
-
 	JugadasF.pop()
 	JugadasC.pop()
-	JugadasM.pop()
+	print JugadasF
+	print JugadasC
+	print "Back Tracking"
 	tabl[ActualF][ActualC]=0
 	return 0
