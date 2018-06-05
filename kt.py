@@ -1,15 +1,13 @@
 # principal.py
 #
-# DESCRIPCION: Programa que permite a un usuario resolver el problema del recorrido \
-# del caballo, a traves de 3 modalidades: Manual: donde es el usuario, quien intenta \
-# resolver el acertijo, "Fuerza Bruta" y "Divide y conquistaras": donde un algoritmo \
-# de backtracking o basandose en las soluciones de Penberry, busca la solucion o determina \
-# el tablero como irresoluble.
+# DESCRIPCION: Programa que determina la primalidad de un entero n>1 dado. \
+# Para ello se puede hacer la verificacion a traves de alguno de los siguientes \
+# 3 algoritmos: División por Tentativa, Aleatorizado basico y Solovay-Strassen.
 #
 # Autores: 
 #	Br. Jose Barrera y Br. Alfredo Cruz.
 #
-# Ultima modificacion: 24/05/2018.
+# Ultima modificacion: 14/06/2018.
 
 import sys
 from manual import manualPrincipal
@@ -18,12 +16,12 @@ from Divide_Conquer import Divide_ConquerPrincipal
 
 # Se le da la bienvenida al usuario
 
-print "Bienvenido al Knight\'s Tour"
+print "Bienvenido al Test De Primalidad"
 print ""
-print "Este posee 3 modalidades: "
-print "0. Manual: Usted escoge el camino que desee."
-print "1. Fuerza Bruta: se evaluan recorridos de manera aleatoria"
-print "2. Divide y Conquistaras"
+print "Este posee 3 algoritmos para escoger: "
+print "0. División por Tentativa."
+print "1. Aleatorizado basico"
+print "2. Solovay-Strassen"
 print "3. Salir"
 print ""
 
